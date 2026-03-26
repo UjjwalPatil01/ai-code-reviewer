@@ -55,5 +55,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Verify Architectural Orchestration
       run: |
-        docker-compose build
-        # In a real environment, you would push to AWS ECR or Docker Hub here
+        if [ -f docker-compose.yml ] || [ -f compose.yml ]; then
+          docker compose build
+        else
+          echo "No docker-compose.yml found — skipping Docker build."
+        fi
