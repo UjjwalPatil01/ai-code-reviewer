@@ -1,76 +1,146 @@
-# CodeNova: AI Code Reviewer
+# ⚡ CodeNova — AI Code Reviewer
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/yourusername/CodeNova/actions) [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)](https://www.python.org/) [![React](https://img.shields.io/badge/react-18.2%20%7C%202.0-blue)](https://reactjs.org/)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=flat-square)](https://github.com/UjjwalPatil01/ai-code-reviewer/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11+-blue?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![React](https://img.shields.io/badge/react-18+-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
+[![Gemini](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-8E75B2?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev/)
 
-**CodeNova** is a premium AI‑powered developer tool that instantly catches bugs, code smells, and security issues, delivering deep, line‑specific insights while you code.
+**CodeNova** is a premium, AI-powered code review platform that instantly catches bugs, code smells, and security vulnerabilities — delivering deep, line-specific insights through an elite developer dashboard.
 
 ---
 
 ## 🌟 Key Features
 
-- **Elite UI/UX** – Glass‑morphism panels, dark mode, ambient lighting, and animated neon score rings for a Vercel‑style experience.
-- **AI‑Driven Analysis** – Powered by Google Gemini 2.5 Flash, providing detailed diagnostics, line‑specific highlighting, and actionable suggestions.
-- **Live Editor Interaction** – Hover over a violation to see the offending line highlighted directly in the code editor.
-- **Automated CI/CD** – GitHub Actions run linting, tests, and build checks on every push, ensuring a reliable production pipeline.
+| Feature | Description |
+|---------|-------------|
+| **AI-Powered Analysis** | Powered by Google Gemini 2.5 Flash for deep-dive diagnostics with line-specific suggestions |
+| **Elite UI/UX** | Vercel/Linear-tier glassmorphism, dark mode, ambient lighting, and animated neon score rings |
+| **Live Editor Sync** | Hover over a violation card → the exact line highlights in the code editor in real-time |
+| **Score Dashboard** | SVG circular score indicator with dynamic color coding (Green/Yellow/Red) |
+| **User Authentication** | JWT-based auth with secure password hashing (bcrypt) |
+| **Review History** | Full history dashboard to revisit past code reviews |
+| **CI/CD Pipeline** | GitHub Actions for automated testing and Docker build verification |
+| **Dockerized** | Full Docker Compose setup with backend, frontend, MongoDB, Redis, and Celery worker |
 
 ---
 
 ## 🛡️ Security & API Keys
 
-> **⚠️ Critical:** The Gemini API key **must never** be exposed to the client.
->
-> - Store the key in a `.env` file at the project root:
->   ```
->   GEMINI_API_KEY=your_gemini_api_key_here
->   ```
-> - The backend reads this variable and forwards it via a secure header; the frontend never sees the key.
-> - **Always** add `.env` (and `.env.example`) to `.gitignore` to prevent accidental commits.
->
-> **Example `.env.example`**:
-> ```
-> # Rename to .env and insert your Gemini API key
-> GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-> ```
+> [!CAUTION]
+> **The Gemini API key must NEVER be exposed to the client or committed to Git.**
+
+The API key is handled **exclusively by the backend** via secure HTTP headers (`x-goog-api-key`). The frontend never sees or touches the key.
+
+**Setup:**
+
+1. Copy the example env file:
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
+
+2. Add your [Gemini API key](https://aistudio.google.com/apikey):
+   ```env
+   GEMINI_API_KEY=your_actual_api_key_here
+   ```
+
+3. **Verify** that `.env` is listed in `.gitignore` (it already is ✅).
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## 🚀 Quick Start
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/UjjwalPatil01/ai-code-reviewer.git
-cd CodeNova
+cd ai-code-reviewer
 
-# Backend setup (Python 3.11+)
+# 2. Backend setup (Python 3.11+)
+cd backend
 python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
-pip install -r backend/requirements.txt
-cp backend/.env.example backend/.env   # Edit with your Gemini key
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS/Linux
+pip install -r requirements.txt
+cp .env.example .env         # Add your GEMINI_API_KEY
 
-# Frontend setup (Node.js 18+)
-cd frontend
+# 3. Frontend setup (Node.js 20+)
+cd ../frontend
 npm install
-cp .env.example .env   # Adjust if needed
+cp .env.example .env
 
-# Run both servers (in separate terminals)
-# Backend
-cd ../backend
+# 4. Run both servers (in separate terminals)
+
+# Terminal 1 — Backend
+cd backend
 python app.py
 
-# Frontend
-cd ../frontend
+# Terminal 2 — Frontend
+cd frontend
 npm run dev
 ```
+
+Open **http://localhost:5173** in your browser and start reviewing code!
+
+---
+
+## 🐳 Docker (Optional)
+
+```bash
+# Run the full stack with Docker Compose
+docker compose up --build
+```
+
+This spins up: **Backend** (Flask) · **Frontend** (Nginx) · **MongoDB** · **Redis** · **Celery Worker**
 
 ---
 
 ## 🏗️ Tech Stack
 
-- **Frontend:** React 18, Vite, Tailwind CSS (custom glass‑morphism utilities), Monaco Editor
-- **Backend:** Flask 2.x, Python 3.11, Celery (optional async tasks)
-- **AI:** Google Gemini 2.5 Flash (via secure backend proxy)
-- **CI/CD:** GitHub Actions (lint, test, build)
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 18, Vite, Monaco Editor, Lucide Icons |
+| **Backend** | Flask, Python 3.11, JWT Auth, bcrypt |
+| **AI Engine** | Google Gemini 2.5 Flash (via secure backend proxy) |
+| **Database** | SQLite (dev) / MongoDB (production) |
+| **Task Queue** | Celery + Redis (optional async reviews) |
+| **CI/CD** | GitHub Actions (Pytest, Vitest, Docker) |
+| **Containerization** | Docker + Docker Compose |
 
 ---
 
-*CodeNova is open‑source, community‑driven, and built for developers who demand the highest quality tooling.*
+## 📁 Project Structure
+
+```
+ai-code-reviewer/
+├── backend/
+│   ├── api/
+│   │   ├── routes/          # Flask Blueprints (auth, review)
+│   │   ├── services/        # AI service, auth logic
+│   │   ├── schemas/         # Response models
+│   │   └── utils/           # Parsers, helpers
+│   ├── app.py               # Flask entry point
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── components/      # AuthModal, Home, HistoryDashboard
+│   │   ├── App.jsx          # Main application
+│   │   └── index.css        # Elite design system
+│   ├── Dockerfile
+│   └── package.json
+├── .github/workflows/       # CI/CD pipeline
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## 👤 Author
+
+**Ujjwal Patil** — [GitHub](https://github.com/UjjwalPatil01)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).

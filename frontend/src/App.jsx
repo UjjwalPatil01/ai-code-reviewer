@@ -20,9 +20,9 @@ function App() {
   const [decorations, setDecorations] = useState([]);
 
   // AUTH STATE
-  const [token, setToken] = useState(localStorage.getItem('nexus_token') || null);
-  const [userEmail, setUserEmail] = useState(localStorage.getItem('nexus_email') || null);
-  const [userName, setUserName] = useState(localStorage.getItem('nexus_name') || null);
+  const [token, setToken] = useState(localStorage.getItem('codenova_token') || null);
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('codenova_email') || null);
+  const [userName, setUserName] = useState(localStorage.getItem('codenova_name') || null);
   const [showAuth, setShowAuth] = useState(false);
   const [viewHistory, setViewHistory] = useState(false);
   const [currentView, setCurrentView] = useState('home'); // 'home', 'editor'
@@ -30,9 +30,9 @@ function App() {
   const lineHighlightDecoration = useRef([]);
 
   const handleLogout = () => {
-    localStorage.removeItem('nexus_token');
-    localStorage.removeItem('nexus_email');
-    localStorage.removeItem('nexus_name');
+    localStorage.removeItem('codenova_token');
+    localStorage.removeItem('codenova_email');
+    localStorage.removeItem('codenova_name');
     setToken(null);
     setUserEmail(null);
     setUserName(null);
@@ -40,9 +40,9 @@ function App() {
   };
 
   const handleAuthenticated = (newToken, newEmail, newName) => {
-    localStorage.setItem('nexus_token', newToken);
-    localStorage.setItem('nexus_email', newEmail);
-    if (newName) localStorage.setItem('nexus_name', newName);
+    localStorage.setItem('codenova_token', newToken);
+    localStorage.setItem('codenova_email', newEmail);
+    if (newName) localStorage.setItem('codenova_name', newName);
     setToken(newToken);
     setUserEmail(newEmail);
     setUserName(newName || null);
