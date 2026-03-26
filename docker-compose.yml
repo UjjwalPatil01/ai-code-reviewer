@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      # Inject the API key securely from your host .env into the container runtime
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      # Tell the backend to connect to the internal Docker mongo instance
+      - MONGO_URI=mongodb://mongo:27017/
+      - MONGO_DB_NAME=ai_code_review
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - mongo
+      - redis
+
+  frontend:
+    build: ./frontend
+    ports:
+      # Map the Nginx internal 80 port to the familiar 5173 host port
+      - "5173:80"
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  celery_worker:
+    build: ./backend
+    command: celery -A api.tasks.celery_app worker --loglevel=info
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - MONGO_URI=mongodb://mongo:27017/
+      - MONGO_DB_NAME=ai_code_review
+    depends_on:
+      - redis
+      - mongo
+
+volumes:
+  mongodb_data:

@@ -1,0 +1,59 @@
+name: Enterprise CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  backend-test:
+    name: Backend CI (Pytets)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+        cache: 'pip'
+    - name: Install Dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Backend Pytest Suite
+      run: |
+        cd backend
+        python -m pytest tests/ --disable-warnings -v
+
+  frontend-test:
+    name: Frontend CI (Vitest)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js 18
+      uses: actions/setup-node@v4
+      with:
+        node-version: "18"
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    - name: Install Dependencies
+      run: |
+        cd frontend
+        npm install
+    - name: Run Frontend Vitest Suite
+      run: |
+        cd frontend
+        npm run test --run
+
+  docker-build-verification:
+    name: Docker Environment Checks
+    needs: [backend-test, frontend-test]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Verify Architectural Orchestration
+      run: |
+        docker-compose build
+        # In a real environment, you would push to AWS ECR or Docker Hub here
