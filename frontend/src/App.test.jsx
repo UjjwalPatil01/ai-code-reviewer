@@ -5,21 +5,24 @@ import { describe, it, expect } from 'vitest';
 describe('App Component', () => {
   it('renders the premium header correctly', () => {
     render(<App />);
-    
-    // Looks for the brand name instead of the generic "Code Review" text
-    expect(screen.getByText(/CodeNova/i)).toBeInTheDocument();
-    
-    // Verifies the new "Sign In / Sign Up" button is rendering
+
+    // Match the nav brand — "CodeNova" is always visible in the nav
+    // Use getAllByText since "CodeNova" appears in both the nav and the hero badge,
+    // then just assert at least one element is in the document.
+    const brandElements = screen.getAllByText(/CodeNova/i);
+    expect(brandElements.length).toBeGreaterThan(0);
+
+    // Verify the auth button renders
     expect(screen.getByText(/Sign In \/ Sign Up/i)).toBeInTheDocument();
   });
 
   it('renders the landing page hero section', () => {
     render(<App />);
-    
-    // Checks for the new fancy "Open Editor" button instead of the old "Editor" text
+
+    // "Open Editor" button should always be present in the nav
     expect(screen.getByText(/Open Editor/i)).toBeInTheDocument();
-    
-    // Checks for your new Vercel-style 2.0 badge
-    expect(screen.getByText(/CodeNova 2.0 is Live/i)).toBeInTheDocument();
+
+    // The Vercel-style live badge on the home screen
+    expect(screen.getByText(/CodeNova 2\.0 is Live/i)).toBeInTheDocument();
   });
 });
