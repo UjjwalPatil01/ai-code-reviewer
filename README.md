@@ -38,7 +38,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/CodeNova.git
+git clone https://github.com/UjjwalPatil01/ai-code-reviewer.git
 cd CodeNova
 
 # Backend setup (Python 3.11+)
